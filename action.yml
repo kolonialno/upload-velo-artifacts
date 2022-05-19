@@ -20,4 +20,4 @@ runs:
       uses: google-github-actions/setup-gcloud@v0
     - name: Upload deploy artifacts to bucket
       shell: bash
-      run: gsutil cp -r .deploy/* "gs://${{ inputs.google_cloud_storage_bucket_name }}/${{ github.repo }}/${{ github.sha }}/"
+      run: gsutil cp -r .deploy/* "gs://${{ inputs.google_cloud_storage_bucket_name }}/${{ github.event.repository.name }}/${{ github.sha }}/"
