@@ -1,0 +1,23 @@
+name: 'Upload Velo deploy artifacts'
+description: 'Run this script to upload the velo .deploy artifacts in the repo to the google bucket'
+inputs:
+  google_service_account_credentials_json:
+    description: "Credentials for the Google service account to use, in JSON format"
+    required: true
+  google_cloud_storage_bucket_name:
+    description: "Name of the Google cloud storage bucket to upload the artifacts to"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Authenticate against Google
+      uses: google-github-actions/auth@v0
+      with:
+        credentials_json: ${{ inputs.google_service_account_credentials_json }}
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+    - name: Upload deploy artifacts to bucket
+      shell: bash
+      run: gsutil cp -r .deploy/* "gs://${{ inputs.google_cloud_storage_bucket_name }}/${{ github.repo }}/${{ github.sha }}/"
